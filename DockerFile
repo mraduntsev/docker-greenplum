@@ -1,0 +1,9 @@
+FROM wangbangming/greenplum:6.19.1
+
+COPY entrypoint.sh /entrypoint.sh
+COPY gpconfig/pg_hba.conf /home/greenplum/gpdata/master/gpseg-1/pg_hba.conf
+
+RUN sed -i 's/\r$//' /entrypoint.sh # Удаляем CRLF
+RUN chmod +x /entrypoint.sh
+
+ENTRYPOINT ["/entrypoint.sh"]

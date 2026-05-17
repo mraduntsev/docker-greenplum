@@ -1,0 +1,32 @@
+services:
+  greenplum:
+    # image: wangbangming/greenplum:6.19.1
+    container_name: greenplum
+    build:
+      context: .
+      dockerfile: ./DockerFile
+    hostname: master
+    privileged: true
+    environment:
+      - container=docker
+      - MASTER_DATA_DIRECTORY=/home/greenplum/gpdata/master/gpseg-1
+      # - MASTER_DATA_DIRECTORY=/data/gpmaster
+      # - SEG_PREFIX=/data/gpdata  #  Префикс для директорий сегментов
+    ports:
+      - "127.0.0.1:5400:5432"
+      # - "5483-5487:5433-5437" #  Пример портов для сегментов (нужно уточнить 
+      # propagation: rshared
+    volumes:
+      - ./gp_master_data:/data/gpmaster
+      - ./gp_segment_data1:/data/gpdata1
+      - ./gp_segment_data2:/data/gpdata2
+    restart: always
+    networks:
+      - web_net
+    command: ["/usr/sbin/init"]
+
+networks:
+  web_net:
+    external: true
+    # name: web_net
+    # driver: bridge
